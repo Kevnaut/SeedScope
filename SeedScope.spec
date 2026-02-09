@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-project_dir = Path(__file__).resolve().parent
+project_dir = Path(SPECPATH)
 assets_dir = project_dir / "app" / "assets"
 app_dir = project_dir / "app"
 

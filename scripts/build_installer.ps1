@@ -5,6 +5,17 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
+function Invoke-Step {
+    param(
+        [string]$Name,
+        [scriptblock]$Command
+    )
+    & $Command
+    if ($LASTEXITCODE -ne 0) {
+        throw "$Name failed with exit code $LASTEXITCODE"
+    }
+}
+
 $projectRoot = Resolve-Path (Join-Path $PSScriptRoot "..")
 $pythonExe = Join-Path $projectRoot ".venv\Scripts\python.exe"
 $pipExe = Join-Path $projectRoot ".venv\Scripts\pip.exe"
@@ -26,12 +37,14 @@ if (-not (Test-Path $issFile)) {
 
 Push-Location $projectRoot
 try {
-    & $pipExe install -r requirements.txt
-    & $pipExe install -r requirements-dev.txt
+    Invoke-Step "Install runtime dependencies" { & $pipExe install -r requirements.txt }
+    Invoke-Step "Install build dependencies" { & $pipExe install -r requirements-dev.txt }
 
-    & $pythonExe scripts/prepare_icon.py
+    Invoke-Step "Prepare icon" { & $pythonExe scripts/prepare_icon.py }
 
-    & $pythonExe -m PyInstaller --noconfirm --clean SeedScope.spec
+    Invoke-Step "Build app with PyInstaller" {
+        & $pythonExe -m PyInstaller --noconfirm --clean SeedScope.spec
+    }
 
     $isccPath = $null
     $iscc = Get-Command "iscc.exe" -ErrorAction SilentlyContinue
@@ -54,7 +67,7 @@ try {
         throw "Inno Setup compiler not found. Install Inno Setup 6 and ensure ISCC.exe is available."
     }
 
-    & $isccPath "/DAppVersion=$Version" $issFile
+    Invoke-Step "Build installer with Inno Setup" { & $isccPath "/DAppVersion=$Version" $issFile }
 
     Write-Host "Build complete."
     Write-Host "App: dist\SeedScope\SeedScope.exe"

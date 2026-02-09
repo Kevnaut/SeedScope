@@ -28,7 +28,16 @@ ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 
 #ifexist "..\app\assets\icon.ico"
-SetupIconFile=..\app\assets\icon.ico
+  #define SetupIconFilePath "..\app\assets\icon.ico"
+#endif
+#ifndef SetupIconFilePath
+  #ifexist "..\app\icon.ico"
+    #define SetupIconFilePath "..\app\icon.ico"
+  #endif
+#endif
+
+#ifdef SetupIconFilePath
+SetupIconFile={#SetupIconFilePath}
 #endif
 
 [Languages]

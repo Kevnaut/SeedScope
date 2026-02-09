@@ -4,14 +4,21 @@ from pathlib import Path
 
 project_dir = Path(__file__).resolve().parent
 assets_dir = project_dir / "app" / "assets"
+app_dir = project_dir / "app"
 
 icon_file = None
 icon_ico = assets_dir / "icon.ico"
 icon_png = assets_dir / "icon.png"
+root_icon_ico = app_dir / "icon.ico"
+root_icon_png = app_dir / "icon.png"
 if icon_ico.exists():
     icon_file = str(icon_ico)
+elif root_icon_ico.exists():
+    icon_file = str(root_icon_ico)
 elif icon_png.exists():
     icon_file = str(icon_png)
+elif root_icon_png.exists():
+    icon_file = str(root_icon_png)
 
 datas = []
 if assets_dir.exists():

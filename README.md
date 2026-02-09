@@ -31,7 +31,7 @@ python -m app.main
 ## Build EXE And Installer (PyInstaller + Inno Setup)
 
 1. Install Inno Setup 6.
-2. Ensure your project icon exists at `app/assets/icon.png` (optional but recommended).
+2. Ensure your project icon exists at `app/assets/icon.png` or `app/icon.png` (optional but recommended).
 3. Run:
 
 ```powershell

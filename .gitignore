@@ -13,6 +13,8 @@ build/
 dist/
 *.manifest
 *.exe.manifest
+app/icon.ico
+app/assets/icon.ico
 
 # Inno Setup outputs
 Output/

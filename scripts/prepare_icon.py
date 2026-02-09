@@ -6,11 +6,17 @@ import sys
 
 def main() -> int:
     root = Path(__file__).resolve().parents[1]
-    src = root / "app" / "assets" / "icon.png"
+    candidates = [
+        root / "app" / "assets" / "icon.png",
+        root / "app" / "icon.png",
+    ]
+    src = next((path for path in candidates if path.exists()), None)
     dst = root / "app" / "assets" / "icon.ico"
+    if not dst.parent.exists():
+        dst = root / "app" / "icon.ico"
 
-    if not src.exists():
-        print(f"[icon] icon.png not found at: {src}")
+    if src is None:
+        print("[icon] icon.png not found at app/assets/icon.png or app/icon.png")
         print("[icon] skipping .ico generation")
         return 0
 
@@ -23,6 +29,7 @@ def main() -> int:
     img = Image.open(src).convert("RGBA")
     sizes = [(256, 256), (128, 128), (64, 64), (48, 48), (32, 32), (16, 16)]
     img.save(dst, format="ICO", sizes=sizes)
+    print(f"[icon] source: {src}")
     print(f"[icon] generated: {dst}")
     return 0
 

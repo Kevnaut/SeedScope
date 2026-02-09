@@ -1,0 +1,3 @@
+World map SVG sourced from the simple-world-map project by Felix Kaestner.
+License: CC BY-SA 3.0.
+https://github.com/flekschas/simple-world-map
